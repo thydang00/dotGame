@@ -2,7 +2,8 @@ var Player = {
 	LIVES: 3,
 	SCORE: 0,
 	LEVEL: 0,
-	TITLE: ["Chiayo", "Noob", "Apprentice", "Journeywomyn", "Master", "Grandmaster", "Legendary", "Prodigy", "Thy"],
+	TITLE: ["Chiayo", "Noob", "Apprentice", "Journeywomyn", "Master",
+			"Grandmaster", "Legendary", "Prodigy", "Thy"],
 };
 
 var Paddle = {
@@ -129,8 +130,8 @@ var Game = {
 	OVER: 1,
 	
 	state: () => {
-		if(Player.LIVES === 0) return Game.OVER;
-		if(Player.LEVEL === 9) return Game.COMPLETED;
+		if(Player.LIVES ===  0) return Game.OVER;
+		if(Player.LEVEL === 10) return Game.COMPLETED;
 	},
 
 	reset: () => {
@@ -197,7 +198,7 @@ var Game = {
 			case 7:
 			case 8:
 			case 9:
-				Paddle.WIDTH = 30;
+				Paddle.WIDTH *= .8;
 				/* fall through */
 
 			case 4:
