@@ -247,13 +247,13 @@ function draw() {
 		break;
     case Game.COMPLETED:
     	Game.message(Game.COMPLETED);
-    	if(keyCode === 32) 
+    	if(mouseIsPressed) 
     		Game.reset();
     	break;
     
     case Game.OVER:
     	Game.message(Game.OVER);
-    	if(keyCode === 32) 
+    	if(mouseIsPressed) 
     		Game.reset();
     	break;
     
@@ -261,6 +261,4 @@ function draw() {
     	Game.run();
     	Game.text();
     }
-
-    keyCode = 0;
 }
