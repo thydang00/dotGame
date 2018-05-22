@@ -2,7 +2,7 @@ var Player = {
 	LIVES: 3,
 	SCORE: 0,
 	LEVEL: 0,
-	TITLE: ["Chiayo", "Noob", "Apprentice", "Journeywomyn", "Master",
+	TITLE: ["", "Chiayo", "Noob", "Apprentice", "Journeywomyn", "Master",
 			"Grandmaster", "Legendary", "Prodigy", "Thy"],
 };
 
@@ -49,7 +49,7 @@ var Ball = {
         	Ball.SPEED_Y *= -1; // ball bounces down
 
     	if(Ball.Y >= height - Ball.SIZE / 2) {
-        	Ball.Y = 13; 	   // reset position of ball on top of canvas
+        	Ball.Y = 15; 	   // reset position of ball on top of canvas
         	Player.LIVES -= 1; // number of lives decreases by 1
     	}
 
@@ -126,12 +126,14 @@ var Skeets = {
 };
 
 var Game = {
-	COMPLETED: 0,
-	OVER: 1,
+	INTRO: 0,
+	COMPLETED: 1,
+	OVER: 2,
 	
 	state: () => {
+		if(Player.LEVEL ===  0) return Game.INTRO;
 		if(Player.LIVES ===  0) return Game.OVER;
-		if(Player.LEVEL === 10) return Game.COMPLETED;
+		if(Player.LEVEL === 11) return Game.COMPLETED;
 	},
 
 	reset: () => {
@@ -150,16 +152,22 @@ var Game = {
 	},
 
 	message: (type) => {
+		fill(255);
+		textSize(15);
+		textFont("Monospace");
+		
 		switch(type) {
+		case Game.INTRO:
+			text("Welcome to A Dot Game\n\nClick anywhere to play", 30, 150);
+			break;
 		case Game.COMPLETED:
 			text("Congratulations!", 30, 150);
-
 			break;
 		
 		case Game.OVER:
-			text("Game Over. You suck!", 30, 150);
-			text("Score: " + Player.SCORE, 30, 210);
-			text("Level: " + Player.TITLE[Player.LEVEL - 1], 30, 230);
+			text("Game Over. You're a " + 
+					Player.TITLE[Player.LEVEL -1] + "!", 30, 150);
+			text("Score  " + Player.SCORE, 30, 210);
 
 			/* fall through */
 		
@@ -170,16 +178,15 @@ var Game = {
 
 	text: () => {
 		fill(255);
-		textSize(15);
-		textFont("Monospace");
-
-    	text("score: " + Player.SCORE, 30, 30);
+    	text(Player.SCORE, 30, 50);
     	text("<3 ".repeat(Player.LIVES), 300 + 27 * (3 - Player.LIVES), 30);
-    	text(Player.TITLE[Player.LEVEL - 1], 30, 45);
+    	text(Player.TITLE[Player.LEVEL - 1], 30, 30);
 
     	// debug
     	//text("speed_x: " + Math.abs(Ball.SPEED_X), 30, 60);
     	//text("speed_y: " + Math.abs(Ball.SPEED_Y), 30, 75);
+    	//text("Level: " + Player.LEVEL + 
+    	//		" - " + Skeets.NUM_OBJ, 30, 90);
 	},
 
 	run: () => {
@@ -195,9 +202,10 @@ var Game = {
 				Skeets.SIZE -= 10;
 				break;
 
-			case 7:
-			case 8:
-			case 9:
+			case  7:
+			case  8:
+			case  9:
+			case 10:
 				Paddle.WIDTH *= .8;
 				/* fall through */
 
@@ -211,13 +219,11 @@ var Game = {
 				Ball.SPEED_Y = _neg(Ball.SPEED_Y) * (_abs(Ball.SPEED_Y) + .5)
 				break;
 			}
-
-			Skeets.create(++Player.LEVEL);
+			Skeets.create(Player.LEVEL++);
 		}
-		
 		Skeets.draw();
 		Paddle.draw();
-		Ball.draw();
+		Ball.draw();		
 	}
 }
 
@@ -234,6 +240,11 @@ function draw() {
     background(0); // clear screen
 
     switch(Game.state()) {
+    case Game.INTRO:
+    	Game.message(Game.INTRO);
+    	if(mouseIsPressed)
+			Player.LEVEL = 1;
+		break;
     case Game.COMPLETED:
     	Game.message(Game.COMPLETED);
     	if(keyCode === 32) 
